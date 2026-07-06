@@ -1,0 +1,208 @@
+<!DOCTYPE html>  <html lang="en">    <head>      <meta charset="UTF-8">        <meta name="viewport" content="width=device-width, initial-scale=1.0">          <title>RDCS CYBER PLATFORM</title>  <style>            body{  margin:0;  font-family:Arial;  background:#000;  color:#00ff88;  overflow:hidden;  }    /* MATRIX */  canvas{  position:fixed;  top:0;  left:0;  z-index:-2;
+}
+
+/* LAYOUT */
+.container{
+display:flex;
+height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:250px;
+background:#050505;
+border-right:1px solid #00ff88;
+padding:10px;
+}
+
+.sidebar h2{
+text-align:center;
+text-shadow:0 0 10px #00ff88;
+}
+
+.menu{
+padding:10px;
+cursor:pointer;
+border-bottom:1px solid #111;
+}
+
+.menu:hover{
+background:#00ff88;
+color:#000;
+}
+
+/* MAIN */
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+/* TOP BAR */
+.topbar{
+padding:10px;
+background:#050505;
+border-bottom:1px solid #00ff88;
+display:flex;
+justify-content:space-between;
+}
+
+/* DASHBOARD */
+.dashboard{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:10px;
+}
+
+.card{
+background:#050505;
+border:1px solid #00ff88;
+padding:15px;
+text-align:center;
+transition:.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px #00ff88;
+}
+
+/* CHAT */
+.chatbox{
+position:absolute;
+bottom:0;
+right:0;
+width:300px;
+height:400px;
+background:#050505;
+border:1px solid #00ff88;
+display:flex;
+flex-direction:column;
+}
+
+.messages{
+flex:1;
+overflow:auto;
+padding:10px;
+font-size:13px;
+}
+
+.inputbox{
+display:flex;
+}
+
+input{
+flex:1;
+padding:10px;
+background:#111;
+border:none;
+color:#fff;
+}
+
+button{
+background:#00ff88;
+border:none;
+cursor:pointer;
+}
+
+/* TERMINAL */
+.terminal{
+height:150px;
+margin:10px;
+border:1px solid #00ff88;
+padding:10px;
+overflow:auto;
+font-family:monospace;
+background:#000;
+}
+</style>  </head>  <body>  <canvas id="matrix"></canvas>
+
+<div class="container">  <!-- SIDEBAR -->  <div class="sidebar">                                  
+<h2>RDCS</h2>                                  
+<div class="menu">Dashboard</div>                                  
+<div class="menu">Security Scan</div>                                  
+<div class="menu">Threat Monitor</div>                                  
+<div class="menu">Admin Panel</div>                                  
+</div>  <!-- MAIN -->  <div class="main">  <div class="topbar">                                  
+<div>🔥 CYBER SECURITY PLATFORM</div>                                  
+<div id="status">ONLINE</div>                                  
+</div>  <!-- DASHBOARD -->  <div class="dashboard">  <div class="card">Firewall<br><span id="fw">0%</span></div>                                  
+<div class="card">Threat<br><span id="threat">LOW</span></div>                                  
+<div class="card">Users<br><span id="users">0</span></div>  </div>  <!-- TERMINAL -->  <div class="terminal" id="terminal"></div>  </div>  </div>  <!-- CHAT -->  <div class="chatbox">  <div class="messages" id="chat"></div>  <div class="inputbox">                                  
+<input id="msg" placeholder="Type message...">                                  
+<button onclick="send()">Send</button>                                  
+</div>  </div>  <script>    /* MATRIX */                              
+const canvas=document.getElementById("matrix");                              
+const ctx=canvas.getContext("2d");  canvas.width=window.innerWidth;                            
+canvas.height=window.innerHeight;  let letters="01RDCSCYBERSECURITY";                          
+let font=14;                          
+let columns = Math.floor(canvas.width / font);                  
+let drops=[];  for(let i=0;i<columns;i++) drops[i]=1;  function draw(){                      
+ctx.fillStyle="rgba(0,0,0,0.05)";                      
+ctx.fillRect(0,0,canvas.width,canvas.height);  ctx.fillStyle="#00ff88";                    
+ctx.font=font+"px monospace";  for(let i=0;i<drops.length;i++){                  
+let text = letters[Math.floor(Math.random() * letters.length)];                  
+ctx.fillText(text, i * font, drops[i] * font);  if(drops[i]*font>canvas.height) drops[i]=0;                
+drops[i]++;                
+}                
+}  setInterval(draw,30);  /* DASHBOARD */            
+let fw=0;            
+let users=0;  setInterval(()=>{          
+if(fw<100) fw++;          
+if(users<999) users+=5;  document.getElementById("fw").innerText=fw+"%";        
+document.getElementById("users").innerText=users;  let t=["LOW","MEDIUM","HIGH","CRITICAL"];      
+document.getElementById("threat").innerText=      
+t[Math.floor(Math.random()*t.length)];  },800);  /* TERMINAL */  
+let logs=[  
+"System booting...",  
+"Firewall active...",  
+"Scanning network...",  
+"AI Security running...",  
+"All systems secure ✔"  
+];  let i=0;
+
+setInterval(()=>{
+let term=document.getElementById("terminal");
+
+term.innerHTML+="> "+logs[i]+"<br>";
+term.scrollTop=term.scrollHeight;
+
+i++;
+if(i>=logs.length){
+i=0;
+term.innerHTML="";
+}
+
+},1500);
+
+/* CHAT SYSTEM */
+function send(){
+let msg=document.getElementById("msg").value;
+if(!msg) return;
+
+let chat=document.getElementById("chat");
+
+chat.innerHTML+="<div>You: "+msg+"</div>";
+chat.innerHTML+="<div>RDCS AI: Message received ✔</div>";
+
+document.getElementById("msg").value="";
+chat.scrollTop=chat.scrollHeight;
+}
+
+window.addEventListener("resize", () => {
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+columns = Math.floor(canvas.width / font);
+drops = [];
+
+for (let i = 0; i < columns; i++) {
+drops[i] = 1;
+}
+
+});
+
+</script>  </body>
+
+</html>    
